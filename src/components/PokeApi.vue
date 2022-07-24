@@ -1,5 +1,13 @@
 <template>
   <div class="template">
+    <!-- Quantidade de Pokémons na sua Pokedex -->
+    <div class="container qtd">
+      <div class="row">
+        <div class="col-9"></div>
+        <div class="col-3">Pokémons em sua Pokedex: {{vetor_pokemons_selecionados.length}}</div>
+      </div>
+    </div>
+
     <!-- Pesquisa -->
     <form class="container">
       <div class="row">
@@ -15,7 +23,7 @@
         <div class="col-2" v-for="(v, indice) in vetor.filter(obj => {return obj.name.indexOf(termoPesquisa) >= 0; })" v-bind:key="indice">
           <div class="card">
             <img :src="v.sprites.front_default" >
-            <button class="btn btn-primary">{{v.name}}</button>
+            <button class="btn btn-primary" @click="cadastrar(v.name)">{{v.name}}</button>
           </div>
         </div>
       </div>
@@ -31,7 +39,8 @@ export default {
     return{
       // Variáveis
       vetor : [],
-      termoPesquisa : ''
+      termoPesquisa : '',
+      vetor_pokemons_selecionados : []
     }
   },
   beforeMount(){
@@ -48,6 +57,18 @@ export default {
         .then(retorno => retorno.json())
         .then(pokemon => this.vetor.push(pokemon))
       }
+    },
+
+    cadastrar(nome){
+      // Verifica se o Pokémon selecionado está cadastrado
+      if(this.vetor_pokemons_selecionados.findIndex(n => {return n == nome}) == -1){
+        this.vetor_pokemons_selecionados.push(nome);
+        alert("Pokémon cadastrado!");
+      }else{
+        alert("Este Pokémon já está cadastrado");
+      }
+
+      
     }
   }
 }
@@ -55,6 +76,11 @@ export default {
 
 
 <style scoped>
+  .qtd{
+    margin-top: 10px;
+    text-align: right;
+  }
+
   .col-2{
     margin-bottom: 20px;
   }
